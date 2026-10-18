@@ -1,0 +1,32 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "harness-ablate"
+version = "0.1.0"
+description = "Find out which parts of your CLAUDE.md, skills and hooks still help on today's model. Some of them make it worse."
+readme = "README.md"
+license = "MIT"
+requires-python = ">=3.10"
+authors = [{ name = "harness-ablate contributors" }]
+keywords = ["claude-code", "coding-agents", "ablation", "evals", "claude-md", "agents-md"]
+classifiers = [
+  "Programming Language :: Python :: 3",
+  "License :: OSI Approved :: MIT License",
+  "Environment :: Console",
+  "Topic :: Software Development :: Testing",
+]
+dependencies = ["typer>=0.12", "pyyaml>=6", "rich>=13"]
+
+[project.optional-dependencies]
+dev = ["pytest>=8"]
+
+[project.scripts]
+harness-ablate = "harness_ablate.cli:app"
+
+[tool.hatch.build.targets.wheel]
+packages = ["harness_ablate"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
