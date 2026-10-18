@@ -121,8 +121,8 @@ def todo(scores: Scores) -> list[str]:
         items.append(f"The whole harness isn't paying for itself on these tasks: with no harness at all the "
                      f"pass rate is {pct(scores.bare.pass_rate)} vs {pct(base.pass_rate)} with it.")
     if any(s.low_confidence for s in scores.pieces) or base.low_confidence:
-        items.append(f"Rows marked LOW CONFIDENCE have fewer than 3 complete repeats. Re-run with "
-                     f"`--repeats 3` before deleting anything you care about.")
+        items.append("Rows marked LOW CONFIDENCE have fewer than 3 complete repeats. Re-run with "
+                     "`--repeats 3` before deleting anything you care about.")
     no_data = [s for s in scores.pieces if s.verdict == NO_DATA]
     if no_data:
         items.append("No completed runs for " + ", ".join(code(s.piece) for s in no_data)

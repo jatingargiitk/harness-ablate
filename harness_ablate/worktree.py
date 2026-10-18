@@ -20,6 +20,7 @@ from typing import Iterator
 from .harness import HARNESS_PATHS
 
 _git_lock = threading.Lock()  # git worktree add/remove take repo-wide locks
+OWNER_FILE = ".harness-ablate-pid"
 
 
 class GitError(RuntimeError):
@@ -99,6 +100,7 @@ def worktree(info: RepoInfo, *, allow_dirty: bool = False, keep: bool = False,
              base_dir: str | Path | None = None) -> Iterator[Path]:
     """Yield the project directory inside a fresh worktree; delete it afterwards."""
     parent = Path(tempfile.mkdtemp(prefix="harness-ablate-", dir=base_dir))
+    (parent / OWNER_FILE).write_text(str(os.getpid()))
     wt = parent / info.name
     with _git_lock:
         git(["worktree", "add", "--detach", "--quiet", str(wt), info.commit], info.root)
@@ -110,6 +112,39 @@ def worktree(info: RepoInfo, *, allow_dirty: bool = False, keep: bool = False,
         if not keep:
             remove_worktree(info.root, wt)
             shutil.rmtree(parent, ignore_errors=True)
+
+
+def _alive(pid: int) -> bool:
+    try:
+        os.kill(pid, 0)
+    except ProcessLookupError:
+        return False
+    except PermissionError:
+        return True
+    return True
+
+
+def cleanup_stale(root: Path) -> int:
+    """Remove worktrees left behind by a killed harness-ablate process. Returns how many."""
+    removed = 0
+    listing = subprocess.run(["git", "worktree", "list", "--porcelain"], cwd=root, capture_output=True, text=True).stdout
+    for line in listing.splitlines():
+        if not line.startswith("worktree "):
+            continue
+        wt = Path(line[len("worktree "):])
+        owner = wt.parent / OWNER_FILE
+        if not wt.parent.name.startswith("harness-ablate-") or not owner.is_file():
+            continue
+        try:
+            pid = int(owner.read_text().strip())
+        except ValueError:
+            continue
+        if not _alive(pid):
+            remove_worktree(root, wt)
+            shutil.rmtree(wt.parent, ignore_errors=True)
+            removed += 1
+    subprocess.run(["git", "worktree", "prune"], cwd=root, capture_output=True)
+    return removed
 
 
 def remove_worktree(root: Path, wt: Path) -> None:

@@ -18,7 +18,7 @@ import time
 from functools import lru_cache
 from pathlib import Path
 
-from ..check import kill_group
+from ..check import kill_group, release, spawn
 from ..tasks import Task
 from .base import INFRA, TIMEOUT, RunResult
 
@@ -137,9 +137,8 @@ class ClaudeRunner:
         env = {k: v for k, v in os.environ.items() if k not in ("CLAUDECODE", "CLAUDE_CODE_ENTRYPOINT")}
         start = time.monotonic()
         try:
-            proc = subprocess.Popen(self.command(task.prompt, max_turns, budget_usd), cwd=workdir, env=env,
-                                    stdin=subprocess.DEVNULL, stdout=subprocess.PIPE, stderr=subprocess.PIPE,
-                                    text=True, errors="replace", start_new_session=True)
+            proc = spawn(self.command(task.prompt, max_turns, budget_usd), cwd=workdir, env=env,
+                         stdout=subprocess.PIPE, stderr=subprocess.PIPE)
         except OSError as e:
             return RunResult(error=f"could not start claude: {e}", error_kind=INFRA)
         try:
@@ -150,6 +149,8 @@ class ClaudeRunner:
             # Spend is unknown; the engine charges the per-run budget against --max-cost.
             return RunResult(error=f"timed out after {timeout:.0f}s", error_kind=TIMEOUT,
                              wall_s=round(time.monotonic() - start, 2))
+        finally:
+            release(proc)
         wall = time.monotonic() - start
         data = parse_result(out)
         if data is None:
@@ -158,7 +159,11 @@ class ClaudeRunner:
         return result_to_run(data, wall)
 
     def estimate_cost_per_run(self) -> float:
-        if self._cost_per_run is not None:
-            return self._cost_per_run
-        m = (self.model or "").lower()
-        return next((v for k, v in COST_PER_RUN.items() if k in m), DEFAULT_COST_PER_RUN)
+        return estimate_cost_per_run(self.model, self._cost_per_run)
+
+
+def estimate_cost_per_run(model: str | None, override: float | None = None) -> float:
+    if override is not None:
+        return override
+    m = (model or "").lower()
+    return next((v for k, v in COST_PER_RUN.items() if k in m), DEFAULT_COST_PER_RUN)

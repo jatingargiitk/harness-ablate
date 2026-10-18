@@ -12,6 +12,7 @@ from __future__ import annotations
 
 import hashlib
 import re
+import time
 from pathlib import Path
 
 from ..harness import MEMORY_FILES, SKILLS_DIR, hook_pieces, tokens_of
@@ -48,8 +49,10 @@ class FakeRunner:
 
     def __init__(self, model: str = "fake", base_rate: float = 0.6, rules: list[tuple[str, float]] | None = None,
                  seed: str = "0", infra_errors: set[tuple[str, int]] | None = None,
-                 timeouts: set[tuple[str, int]] | None = None, task_bias: dict[str, float] | None = None):
+                 timeouts: set[tuple[str, int]] | None = None, task_bias: dict[str, float] | None = None,
+                 delay_s: float = 0.0):
         self.model = model
+        self.delay_s = delay_s
         self.base_rate = base_rate
         self.rules = [(re.compile(p, re.I), d) for p, d in (DEFAULT_RULES if rules is None else rules)]
         self.seed = seed
@@ -67,6 +70,8 @@ class FakeRunner:
             *, repeat: int = 0, budget_usd: float | None = None) -> RunResult:
         workdir = Path(workdir)
         self.calls.append((task.id, repeat, workdir))
+        if self.delay_s:
+            time.sleep(self.delay_s)
         text = harness_text(workdir)
         n_hooks = len(hook_pieces(workdir))
         tokens_in = (BASE_TOKENS_IN + tokens_of(text)) * TURNS

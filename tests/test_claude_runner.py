@@ -1,7 +1,6 @@
 """Claude runner tests against a stub `claude` binary (no API calls)."""
 
 import json
-import os
 import stat
 import tempfile
 from pathlib import Path

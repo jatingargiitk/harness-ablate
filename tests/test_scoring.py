@@ -4,7 +4,7 @@ import json
 from conftest import write_harness
 from helpers import meta_for, simulate, tasks
 
-from harness_ablate.report import load_results, render_markdown, write_csv, write_report
+from harness_ablate.report import load_results, write_report
 from harness_ablate.runners.fake import FakeRunner
 from harness_ablate.scoring import CUT, HARMFUL, KEEP, NEUTRAL, NO_DATA, noise_band, score, variant_stats
 from harness_ablate.variants import Variant
