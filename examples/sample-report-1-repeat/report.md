@@ -29,10 +29,11 @@ Baseline (full harness) passes **0% (0/5)** of runs. Noise band: ±20 pts; a pie
 
 1. **Remove or rewrite `claude_md:"## Conventions"`.** Without it the pass rate goes from 0% to 100% (+100 pts). Low confidence: confirm with more repeats first.
 2. **Remove or rewrite `skill:run-tests`.** Without it the pass rate goes from 0% to 40% (+40 pts). Low confidence: confirm with more repeats first.
-3. `claude_md:"## Style"` moved the pass rate +20 pts when removed, inside the ±20 pt noise band. More repeats would settle it.
-4. No measurable effect, little cost (keep or cut, your call): `claude_md:"## Commits"`, `claude_md:"## Layout"`, `claude_md:"## Project"`, `claude_md:"## Testing"`, `hook:PostToolUse[0]`.
-5. The whole harness isn't paying for itself on these tasks: with no harness at all the pass rate is 100% vs 0% with it.
-6. Rows marked LOW CONFIDENCE have fewer than 3 complete repeats. Re-run with `--repeats 3` before deleting anything you care about.
+3. With the baseline this low, the HARMFUL piece hides what everything else does: nothing can lower a pass rate that's already near zero. Fix it, then re-run to judge the rest.
+4. `claude_md:"## Style"` moved the pass rate +20 pts when removed, inside the ±20 pt noise band. More repeats would settle it.
+5. No measurable effect, little cost (keep or cut, your call): `claude_md:"## Commits"`, `claude_md:"## Layout"`, `claude_md:"## Project"`, `claude_md:"## Testing"`, `hook:PostToolUse[0]`.
+6. The whole harness isn't paying for itself on these tasks: with no harness at all the pass rate is 100% vs 0% with it.
+7. Rows marked LOW CONFIDENCE have fewer than 3 complete repeats. Re-run with `--repeats 3` before deleting anything you care about.
 
 ## Per-task passes
 

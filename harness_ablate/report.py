@@ -103,6 +103,9 @@ def todo(scores: Scores) -> list[str]:
             items.append(f"**Remove or rewrite {code(s.piece)}.** Without it the pass rate goes from "
                          f"{pct(base.pass_rate)} to {pct(s.pass_rate)} ({pts(s.delta)})."
                          + (unsure if s.low_confidence else ""))
+    if items and base.pass_rate is not None and base.pass_rate < 0.5:
+        items.append("With the baseline this low, the HARMFUL piece hides what everything else does: nothing "
+                     "can lower a pass rate that's already near zero. Fix it, then re-run to judge the rest.")
     cuts = [s for s in scores.pieces if s.verdict == CUT]
     for s in cuts:
         saves = []
