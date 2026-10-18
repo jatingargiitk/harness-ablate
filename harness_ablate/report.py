@@ -97,10 +97,12 @@ def code(piece: str) -> str:
 def todo(scores: Scores) -> list[str]:
     base = scores.baseline
     items = []
+    unsure = " Low confidence: confirm with more repeats first."
     for s in scores.pieces:
         if s.verdict == HARMFUL:
             items.append(f"**Remove or rewrite {code(s.piece)}.** Without it the pass rate goes from "
-                         f"{pct(base.pass_rate)} to {pct(s.pass_rate)} ({pts(s.delta)}).")
+                         f"{pct(base.pass_rate)} to {pct(s.pass_rate)} ({pts(s.delta)})."
+                         + (unsure if s.low_confidence else ""))
     cuts = [s for s in scores.pieces if s.verdict == CUT]
     for s in cuts:
         saves = []
@@ -109,7 +111,7 @@ def todo(scores: Scores) -> list[str]:
         if (s.cost_saved or 0) > 0:
             saves.append(money(s.cost_saved))
         items.append(f"**Cut {code(s.piece)}.** No measurable effect on pass rate; removing it saves "
-                     f"{' and '.join(saves)} per run.")
+                     f"{' and '.join(saves)} per run." + (unsure if s.low_confidence else ""))
     keeps = [s for s in scores.pieces if s.verdict == KEEP]
     if keeps:
         items.append("**Keep** " + ", ".join(f"{code(s.piece)} ({pts(s.delta)} without it)" for s in keeps) + ".")
