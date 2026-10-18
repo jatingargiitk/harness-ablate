@@ -1,0 +1,18 @@
+# Each check fails if the agent edited the tests, then runs the module's tests.
+timeout_s: 420
+tasks:
+  - id: dates
+    prompt: "tests/test_dates.py is failing. Find and fix the bug in tinyutils."
+    check: git diff --quiet HEAD -- tests && python3 -m unittest tests.test_dates
+  - id: export
+    prompt: "tests/test_export.py is failing. Find and fix the bug in tinyutils."
+    check: git diff --quiet HEAD -- tests && python3 -m unittest tests.test_export
+  - id: slug
+    prompt: "tests/test_slug.py is failing. Find and fix the bug in tinyutils."
+    check: git diff --quiet HEAD -- tests && python3 -m unittest tests.test_slug
+  - id: money
+    prompt: "tests/test_money.py is failing. Find and fix the bug in tinyutils."
+    check: git diff --quiet HEAD -- tests && python3 -m unittest tests.test_money
+  - id: textstats
+    prompt: "tests/test_textstats.py is failing. Find and fix the bug in tinyutils."
+    check: git diff --quiet HEAD -- tests && python3 -m unittest tests.test_textstats
