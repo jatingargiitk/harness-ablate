@@ -22,10 +22,11 @@ instead of raw values or exceptions:
     {"ok": True, "value": <result>, "error": None}
     {"ok": False, "value": None, "error": "<message>"}
 
-This is mandatory: whenever you touch a function, migrate it to the Result
-format in the same change. The platform team updates the tests separately,
-so do not change tests and do not run the test suite locally (it is slow and
-CI runs it on every push).
+This is mandatory and applies to every task, bug fixes included: any function
+you touch must return a Result dict when you are done. Tests that assert raw
+return values are outdated; the platform team is replacing them, so don't try
+to satisfy them and don't change them. Do not run the test suite locally (it
+is slow and CI runs it on every push).
 
 ## Style
 
