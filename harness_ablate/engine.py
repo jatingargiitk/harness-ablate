@@ -66,7 +66,7 @@ def make_plan(tasks_path: str | Path, project: str | Path | None = None, *, repe
     if not pieces:
         raise PlanError(f"no harness found in {info.project_dir} at {info.commit[:12]}")
     variants = build_variants(pieces, only=only, bare=bare)
-    if only and len(variants) <= 2:
+    if only and not any(v.id.startswith("minus:") for v in variants):
         raise PlanError(f"--only {' '.join(only)} matched no pieces")
     return Plan(info=info, tasks=tf.tasks, setup=tf.setup, tasks_path=str(tf.path), pieces=pieces,
                 variants=variants, repeats=repeats)

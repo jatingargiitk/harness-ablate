@@ -103,8 +103,13 @@ def todo(scores: Scores) -> list[str]:
                          f"{pct(base.pass_rate)} to {pct(s.pass_rate)} ({pts(s.delta)}).")
     cuts = [s for s in scores.pieces if s.verdict == CUT]
     for s in cuts:
+        saves = []
+        if (s.tokens_saved or 0) > 0:
+            saves.append(f"{num(s.tokens_saved)} tokens")
+        if (s.cost_saved or 0) > 0:
+            saves.append(money(s.cost_saved))
         items.append(f"**Cut {code(s.piece)}.** No measurable effect on pass rate; removing it saves "
-                     f"{num(s.tokens_saved)} tokens and {money(s.cost_saved)} per run.")
+                     f"{' and '.join(saves)} per run.")
     keeps = [s for s in scores.pieces if s.verdict == KEEP]
     if keeps:
         items.append("**Keep** " + ", ".join(f"{code(s.piece)} ({pts(s.delta)} without it)" for s in keeps) + ".")

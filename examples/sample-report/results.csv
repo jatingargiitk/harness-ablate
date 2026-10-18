@@ -1,0 +1,11 @@
+variant,piece,verdict,low_confidence,runs,valid,infra_errors,timeouts,repeats,pass_rate,delta,piece_tokens,mean_tokens,tokens_saved,mean_cost_usd,cost_saved_usd,mean_wall_s,mean_turns
+baseline,,,True,5,5,0,0,1,1.0,,,56103.8,,0.047865,,11.02,4
+"minus:claude_md:""## Conventions""","claude_md:""## Conventions""",CUT,True,5,5,0,0,1,1.0,0.0,123,66241.4,-10137.6,0.042659,0.005206,9.65,4.4
+"minus:claude_md:""## Testing""","claude_md:""## Testing""",KEEP,True,5,5,0,0,1,0.2,-0.8,59,56411.8,-308.0,0.050496,-0.002631,13.44,3.8
+"minus:claude_md:""## Commits""","claude_md:""## Commits""",KEEP,True,5,5,0,0,1,0.6,-0.4,31,56313.6,-209.8,0.048702,-0.000837,11.74,4
+"minus:claude_md:""## Style""","claude_md:""## Style""",KEEP,True,5,5,0,0,1,0.6,-0.4,32,56295.6,-191.8,0.048681,-0.000816,12.16,4
+minus:hook:PostToolUse[0],hook:PostToolUse[0],KEEP,True,5,5,0,0,1,0.6,-0.4,,56742.6,-638.8,0.050581,-0.002715,13.0,4
+"minus:claude_md:""## Project""","claude_md:""## Project""",NEUTRAL,True,5,5,0,0,1,0.8,-0.2,39,56075.4,28.4,0.049137,-0.001272,12.46,4
+minus:skill:run-tests,skill:run-tests,NEUTRAL,True,5,5,0,0,1,0.8,-0.2,135,56234,-130.2,0.047865,0.0,12.26,4
+"minus:claude_md:""## Layout""","claude_md:""## Layout""",NEUTRAL,True,5,5,0,0,1,1.0,0.0,32,55964.2,139.6,0.047932,-6.6e-05,12.47,3.6
+bare,,,True,5,5,0,0,1,1.0,0.0,,67732.4,-11628.6,0.042082,0.005783,9.54,4.8

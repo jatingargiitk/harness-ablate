@@ -47,6 +47,10 @@ def test_plan_counts_and_dirty_refusal(tasks_file, repo):
     assert len(plan.variants) == len(plan.pieces) + 2
     assert len(plan.runs) == len(plan.variants) * 3 * 2
     assert [r[2] for r in plan.runs[: len(plan.variants) * 3]] == [0] * (len(plan.variants) * 3)  # repeat-major
+    assert [v.id for v in make_plan(tasks_file, only=['claude_md:"## Style"'], bare=False).variants] == \
+        ["baseline", 'minus:claude_md:"## Style"']
+    with pytest.raises(PlanError, match="matched no pieces"):
+        make_plan(tasks_file, only=["nope"])
     (repo / "CLAUDE.md").write_text("changed\n")
     with pytest.raises(PlanError, match="uncommitted"):
         make_plan(tasks_file)
