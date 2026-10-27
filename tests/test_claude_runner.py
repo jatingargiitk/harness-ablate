@@ -107,3 +107,17 @@ def test_result_mapping():
     assert parse_result("noise\n" + json.dumps(RESULT))["num_turns"] == 7
     assert parse_result(json.dumps([{"type": "system"}, RESULT]))["num_turns"] == 7
     assert parse_result("not json") is None
+
+
+def test_cost_estimation():
+    from harness_ablate.runners.claude import estimate_cost_per_run
+    # Test model-specific estimates
+    assert estimate_cost_per_run("sonnet") == 0.05
+    assert estimate_cost_per_run("claude-sonnet-3.5") == 0.05
+    assert estimate_cost_per_run("haiku") == 0.05
+    assert estimate_cost_per_run("opus") == 1.00
+    # Test default fallback for unknown models
+    assert estimate_cost_per_run("unknown-model") == 0.10
+    assert estimate_cost_per_run(None) == 0.10
+    # Test override
+    assert estimate_cost_per_run("sonnet", override=0.25) == 0.25
