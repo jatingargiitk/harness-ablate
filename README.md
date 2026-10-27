@@ -26,7 +26,7 @@ fixes the bug and then breaks the return type, every time. Nothing else in this 
 ## Quickstart
 
 ```bash
-pip install git+https://github.com/jatingargiitk/harness-ablate
+pipx install harness-ablate                          # or: pip install harness-ablate
 harness-ablate scan                                   # what's in your harness, and what it costs in tokens
 harness-ablate run tasks.yaml --repeats 1 --only claude_md   # cheap first pass
 ```

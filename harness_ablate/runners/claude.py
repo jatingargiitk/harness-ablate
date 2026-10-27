@@ -23,8 +23,8 @@ from ..tasks import Task
 from .base import INFRA, TIMEOUT, RunResult
 
 # Rough $ per task run, used only for the up-front estimate (override with --cost-per-run).
-COST_PER_RUN = {"haiku": 0.05, "sonnet": 0.30, "opus": 1.00}
-DEFAULT_COST_PER_RUN = 0.50
+COST_PER_RUN = {"haiku": 0.05, "sonnet": 0.05, "opus": 1.00}
+DEFAULT_COST_PER_RUN = 0.10
 WORKTREE_PREFIX = "harness-ablate-"
 
 
